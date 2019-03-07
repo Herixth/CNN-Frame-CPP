@@ -17,8 +17,24 @@ CNN_Part::~CNN_Part() {
 
 // @brief   read input file
 void CNN_Part::read_input(std::ifstream& inFile) {
-    assert(inFile.good());
-    this->input_layer.inputFile(inFile);
+    assert(inFile.good() && this->input_layer.get_D() == 1);
+    //< here the target has been read outside
+    int inH = this->input_layer.get_H();
+    int inW = this->input_layer.get_W();
+
+    double value = 0;
+    For_(row, 0, inH) {
+        For_(col, 0, inW) {
+            inFile >> value;
+            this->input_layer.set_value_fir(0, row, col, value);
+        }
+    }
+}
+
+// @brief   add input layer
+void CNN_Part::add_input_layer(int H, int W) {
+    assert(H <= MAX_WH && W <= MAX_WH && H > 0 && W > 0);
+    this->input_layer.set_H_W(H, W);
 }
 
 // @brief   add layer
@@ -47,6 +63,13 @@ void CNN_Part::add_filter_pool(bool is_pool, int size, int D, int N) {
 Maps& CNN_Part::get_last_map() {
     assert(fp_num);
     return (*this->featureMaps.rbegin());
+}
+
+// @brief   set last featureMap from DNN part
+void CNN_Part::set_last_map(Maps& layer) {
+    //< check
+    assert(this->fp_num);
+    (*this->featureMaps.rbegin()).bp_transform(layer);
 }
 
 // @brief   forward CNN

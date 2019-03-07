@@ -39,7 +39,7 @@ class Matrix;
 class Maps;
 class DNN_Part;
 class CNN_Part;
-class CNN_;
+class CNN_Frame;
 /** @}*/
 
 /**

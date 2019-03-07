@@ -10,15 +10,23 @@ public:
     ~CNN_Part();
 
     //< read input
+    //< re write
     void read_input(std::ifstream&);
 
+    //< add input layer
+    //< H W
+    void add_input_layer(int, int);
+
     //< add filters or pools
-    //< <em> false </em> is_pool   int size int N
-    //< <em> true </em> is_pool   int size  N = 0
+    //< <em> false </em> is_pool   int size int D int N
+    //< <em> true </em> is_pool   int size int D = 0, N = 0
     void add_filter_pool(bool, int, int = 0, int = 0);
 
     //< get last map
     Maps& get_last_map();
+
+    //< set last map
+    void set_last_map(Maps&);
 
     //< Forward stride
     void Forward_CNN(int);

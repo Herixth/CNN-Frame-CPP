@@ -427,6 +427,19 @@ double Maps::get_value_sec(int dep, int hei, int wid) const {
     return this->maps[dep].get_value_sec(hei, wid);
 }
 
+void Maps::set_value_fir(int D, int H, int W, double value) {
+    assert(D < this->__D && H < this->__H && W < this->__W);
+    assert(D >= 0 && H >= 0 && W >= 0);
+    this->maps[D].set_value_fir(H, W, value);
+}
+
+void Maps::set_H_W(int H, int W) {
+    this->maps.clear();
+    this->__D = 1;
+    this->__H = H;
+    this->__W = W;
+}
+
 //***********************************//
 Filters::Filters() {
     this->fils.clear();

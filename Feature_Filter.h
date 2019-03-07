@@ -54,6 +54,12 @@ public:
     double get_value_fir(int, int, int) const;
     double get_value_sec(int, int, int) const;
 
+    //< set value
+    void set_value_fir(int, int, int, double);
+
+    //< for init input layer in CNN_Part
+    void set_H_W(int, int);
+
     //< set bias
     void set_bias(double);
 
