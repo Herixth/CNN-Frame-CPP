@@ -7,16 +7,28 @@
 class CNN_Frame {
 public:
     CNN_Frame();
+    //< input/cfg/res
+    CNN_Frame(const char*, const char*, const char*);
     ~CNN_Frame();
 
     //< read cfg to construct CNN_Frame
     //< detail in CNN.cpp part
-    void read_cfg(const char*);
+    void read_cfg();
 
-    //< read
+    //< read input
+    void read_input();
+
+    //< go forward
+    void Forward();
+
+    //< go backward
+    void Backward(double);
 private:
     CNN_Part __CNN;
     DNN_Part __DNN;
+
+    //< learning rate
+    double __Eta;
 
     //< neccessary file operation
     std::ifstream __input;

@@ -292,10 +292,6 @@ void Matrix::read_file(std::ifstream& inFile) {
     For_(row, 0, this->__H) {
         For_(col, 0, this->__W) {
             inFile >> matr[row][col].first;
-#ifdef DEBUG
-            matr[row][col].first /= 128;
-#endif // DEBUG
-
         }
     }
 }

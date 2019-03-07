@@ -101,6 +101,7 @@ void DNN_Part::Forward_DNN() {
     For_(curr, 0, this->layer_num - 1) {
         this->__layers[curr + 1].Forward_DNN(this->__weights[curr], this->__layers[curr]);
     }
+    //< calc res [TODO]
 }
 
 // @brief   calc delta and update weights

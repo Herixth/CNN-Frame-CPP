@@ -29,7 +29,7 @@ public:
     void set_last_map(Maps&);
 
     //< Forward stride
-    void Forward_CNN(int);
+    void Forward_CNN(int = 1);
 
     //< Backward
     void Backward_CNN(double);
