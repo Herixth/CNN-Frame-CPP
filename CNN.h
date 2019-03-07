@@ -22,7 +22,13 @@ public:
     void Forward();
 
     //< go backward
-    void Backward(double);
+    void Backward();
+
+    //< save param
+    void save_param(const char*);
+
+    //< read param
+    void read_param(const char*);
 private:
     CNN_Part __CNN;
     DNN_Part __DNN;

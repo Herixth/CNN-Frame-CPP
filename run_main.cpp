@@ -47,96 +47,26 @@ using namespace std;
 
 const char* trainfile = "mnist_train.txt";
 const char* testfile = "mnist_test.txt";
+const char* cfgfile = "construct.cfg";
 const char* paramfile = "param.txt";
 const char* resultfile = "res.txt";
 const double rate = 0.35;
 
-#ifdef DEBUG
-inline void save_param(DNN_Part& DNN_) {
-    ofstream outFile(paramfile);
-    
-    DNN_.save_param(outFile);
-
-    outFile.close();
-}
-
-inline void read_param(DNN_Part& DNN_) {
-    ifstream inFile(paramfile);
-
-    DNN_.read_param(inFile);
-
-    inFile.close();
-}
-#endif // DEBUG
-
-
 
 int main(int argc, char* argv[]) {
     srand(unsigned int(time(NULL)));
-    ifstream inFile(trainfile);
-    int digit = 0;
-    
-    DNN_Part DNN_test;
 
-    DNN_test.add_layer(784);
-    DNN_test.add_layer(400);
-    DNN_test.add_layer(10);
-    
-    Maps fet;
+    CNN_Frame cnn_frame(trainfile, cfgfile, resultfile);
 
-    read_param(DNN_test);
+    cnn_frame.read_cfg();
+
+    cnn_frame.read_input();
+
+    cnn_frame.Forward();
+
+    cnn_frame.Backward();
 
 
-    For_(iter, 0, 60000) {
-        inFile >> digit;
-
-
-        fet.inputFile(inFile);
-
-        DNN_test.set_tar(digit);
-        DNN_test.set_input(fet);
-
-        //< train
-        DNN_test.Forward_DNN();
-        DNN_test.Backward_DNN(rate);
-        
-
-        cout << "order: " << iter << endl;
-        int tar = DNN_test.get_tar();
-        cout << "ans: " << tar <<  "     tar: " << digit;
-        if (tar == digit)
-            cout << "    correct";
-        cout << endl << endl;
-        
-        if (iter % 200 == 0)
-            save_param(DNN_test);
-    }
-
-    inFile.close();
-    inFile.open(testfile);
-    int cnt = 0;
-    For_(iter, 0, 10000) {
-        inFile >> digit;
-        fet.inputFile(inFile);
-
-        DNN_test.set_tar(digit);
-        DNN_test.set_input(fet);
-
-        //< train
-        DNN_test.Forward_DNN();
-
-        cout << "test: " << iter << endl;
-        int tar = DNN_test.get_tar();
-        cout << "ans: " << tar <<  "     tar: " << digit;
-        if (tar == digit)
-            cnt++;
-        cout << endl << endl;
-    }
-
-    ofstream res(resultfile, ios::app);
-    res << "rate: " << 1.0 * cnt / 10000 << endl;
-    inFile.close();
-    res.close();
 #ifdef VISUAL_STUDIO
     system("pause");
 #endif

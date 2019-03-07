@@ -100,11 +100,25 @@ void CNN_Frame::Forward() {
 }
 
 // @brief   after Forward
-void CNN_Frame::Backward(double rate) {
+void CNN_Frame::Backward() {
     //< DNN_Part
     this->__DNN.Backward_DNN(this->__Eta);
     //< get first map to CNN
     this->__CNN.set_last_map(this->__CNN.get_last_map());
     //< CNN_Part
     this->__CNN.Backward_CNN(this->__Eta);
+}
+
+// @brief   save parameters
+void CNN_Frame::save_param(const char* filename) {
+    std::ofstream outFile(filename);
+
+    outFile.close();
+}
+
+// @brief   read parameters
+void CNN_Frame::read_param(const char* filename) {
+    std::ifstream inFile(filename);
+
+    inFile.close();
 }
