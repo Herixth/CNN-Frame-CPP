@@ -229,7 +229,7 @@ void Maps::Mean_pooling_delta(Maps& featureMap, int size) {
 }
 
 // @brief   backward one convertion layer
-void Maps::calc_gradient(Maps& featureMap, Filters& filters, int stride) {
+void Maps::calc_gradient(Maps& featureMap, Filters& filters, double rate, int stride) {
     //< check
     assert(this->__D == filters.fils[0].get_D());
     assert(filters.N == featureMap.get_D());
@@ -244,7 +244,7 @@ void Maps::calc_gradient(Maps& featureMap, Filters& filters, int stride) {
         //< padding
         curr_map.padding_0(Padding);
         For_(Dd, 0, this->__D) {
-            bool mode = (Dd != 0);
+            bool mode = (Dn != 0);
             Matrix filt = filters.fils[Dn].get_depth(Dd);
             filt.rotate_180();
             this->maps[Dd].cross_correlation(curr_map, filt, stride, 0, mode, true, false, true);
@@ -272,7 +272,8 @@ void Maps::calc_gradient(Maps& featureMap, Filters& filters, int stride) {
                 sum += featureMap.get_value_sec(Dn, Dr, Dc);
             }
         }
-        filters.fils[Dn].set_bias(sum);
+        double orig_bias = filters.fils[Dn].get_bias();
+        filters.fils[Dn].set_bias(orig_bias - sum * rate);
     }
 
         //< Wi,j
@@ -438,6 +439,7 @@ void Maps::set_H_W(int H, int W) {
     this->__D = 1;
     this->__H = H;
     this->__W = W;
+    this->maps.push_back(Matrix(H, W));
 }
 
 //***********************************//
@@ -471,6 +473,15 @@ void Filters::readFile(std::ifstream& inFile) {
     For_(iter, 0, this->N) {
         this->fils.push_back(Maps());
         (*this->fils.rbegin()).paramFile(inFile);
+    }
+}
+
+// @brief   save file
+void Filters::saveFile(std::ofstream& outFile) {
+    assert(outFile.good());
+    outFile << this->N;
+    For_(iter, 0, this->N) {
+        this->fils[iter].save_param(outFile);
     }
 }
 

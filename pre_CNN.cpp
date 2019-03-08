@@ -61,7 +61,7 @@ void CNN_Part::add_filter_pool(bool is_pool, int size, int D, int N) {
 
 // @brief   get last featureMap
 Maps& CNN_Part::get_last_map() {
-    assert(fp_num);
+    assert(this->fp_num);
     return (*this->featureMaps.rbegin());
 }
 
@@ -83,7 +83,12 @@ void CNN_Part::Forward_CNN(int stride) {
             this->featureMaps[iter].Mean_pooling(this->featureMaps[iter - 1], this->filter_pools[iter].pool_size);
         }
         else {
-            this->featureMaps[iter].Forward_(this->featureMaps[iter - 1], this->filter_pools[iter], stride);
+            if (iter) {
+                this->featureMaps[iter].Forward_(this->featureMaps[iter - 1], this->filter_pools[iter], stride);
+            }
+            else {
+                this->featureMaps[iter].Forward_(this->input_layer, this->filter_pools[iter], stride);
+            }
         }
     }
 }
@@ -100,16 +105,32 @@ void CNN_Part::Backward_CNN(double rate) {
             this->featureMaps[iter].Mean_pooling_delta(this->featureMaps[iter + 1], size);
         }
         else {
-            this->featureMaps[iter].calc_gradient(this->featureMaps[iter + 1], this->filter_pools[iter + 1]);
+            this->featureMaps[iter].calc_gradient(this->featureMaps[iter + 1], this->filter_pools[iter + 1], rate);
         }
     }
     //< input layer
-    this->input_layer.calc_gradient(this->featureMaps[0], this->filter_pools[0]);
+    this->input_layer.calc_gradient(this->featureMaps[0], this->filter_pools[0], rate);
 
     //< update weight
     For_(iter, 0, this->fp_num) {
         if (this->filter_pools[iter].is_pool)
             continue;
         this->filter_pools[iter].update(rate);
+    }
+}
+
+// @brief   save param
+void CNN_Part::save_param(std::ofstream& outFile) {
+    assert(outFile.good() && this->filter_pools.size() == this->fp_num);
+    For_(iter, 0, this->fp_num) {
+        this->filter_pools[iter].saveFile(outFile);
+    }
+}
+
+// @brief   read param
+void CNN_Part::read_param(std::ifstream& inFile) {
+    assert(inFile.good() && this->filter_pools.size() == this->fp_num);
+    For_(iter, 0, this->fp_num) {
+        this->filter_pools[iter].readFile(inFile);
     }
 }

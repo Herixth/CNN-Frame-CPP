@@ -45,10 +45,10 @@ CNN_Frame::~CNN_Frame() {
  */
 void CNN_Frame::read_cfg() {
     assert(this->__cfg_read.good());
-    char op = '\0';
+    char op[10] = "";
     int _ = 0, __ = 0, ___ = 0;
     while (this->__cfg_read >> op) {
-        switch (op) {
+        switch (op[0]) {
         case 'I': case 'i':
             this->__cfg_read >> _ >> __;
             this->__CNN.add_input_layer(_, __);
@@ -67,6 +67,7 @@ void CNN_Frame::read_cfg() {
             break;
         case 'E': case 'e':
             this->__cfg_read >> this->__Eta;
+            break;
         default:
             //< not permit
             assert(false);
@@ -104,14 +105,28 @@ void CNN_Frame::Backward() {
     //< DNN_Part
     this->__DNN.Backward_DNN(this->__Eta);
     //< get first map to CNN
-    this->__CNN.set_last_map(this->__CNN.get_last_map());
+    this->__CNN.set_last_map(this->__DNN.get_first_map());
     //< CNN_Part
     this->__CNN.Backward_CNN(this->__Eta);
+}
+
+// @brief   get res
+int CNN_Frame::get_res() {
+    return this->__DNN.get_res();
+}
+
+// @brief   get tar
+int CNN_Frame::get_tar() {
+    return this->__DNN.get_tar();
 }
 
 // @brief   save parameters
 void CNN_Frame::save_param(const char* filename) {
     std::ofstream outFile(filename);
+    //< CNN_Part
+    this->__CNN.save_param(outFile);
+    //< DNN_Part
+    this->__DNN.save_param(outFile);
 
     outFile.close();
 }
@@ -119,6 +134,10 @@ void CNN_Frame::save_param(const char* filename) {
 // @brief   read parameters
 void CNN_Frame::read_param(const char* filename) {
     std::ifstream inFile(filename);
+    //< CNN_Part
+    this->__CNN.read_param(inFile);
+    //< DNN_Part
+    this->__DNN.read_param(inFile);
 
     inFile.close();
 }

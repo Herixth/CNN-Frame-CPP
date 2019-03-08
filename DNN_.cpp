@@ -58,8 +58,8 @@ void DNN_Part::set_tar(int tar) {
     this->__tar = tar;
 }
 
-// @brief   get tar
-int DNN_Part::get_tar() {
+// @brief   get res
+int DNN_Part::get_res() {
     //< be sure this function called after Forward_DNN
     int tar = 0;
     int num_out = (*this->__layers.rbegin()).get_H();
@@ -92,6 +92,10 @@ int DNN_Part::get_tar() {
 
 
     return tar;
+}
+
+int DNN_Part::get_tar() const {
+    return this->__tar;
 }
 
 // @brief   just go forward

@@ -33,6 +33,12 @@ public:
 
     //< Backward
     void Backward_CNN(double);
+
+    //< param saving 
+    void save_param(std::ofstream&);
+
+    //< read param
+    void read_param(std::ifstream&);
 private:
     //< only input layer
     Maps input_layer;

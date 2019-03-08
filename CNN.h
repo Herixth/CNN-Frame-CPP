@@ -24,6 +24,11 @@ public:
     //< go backward
     void Backward();
 
+    //< get result
+    int get_res();
+    //< get target
+    int get_tar();
+
     //< save param
     void save_param(const char*);
 

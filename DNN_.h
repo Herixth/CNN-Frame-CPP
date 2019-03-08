@@ -21,7 +21,8 @@ public:
     //< read target on handwritten digit
     void set_tar(int);
     //< get target after Forward DNN
-    int get_tar();
+    int get_res();
+    int get_tar() const;
 
     //< call after set all
     void Forward_DNN();

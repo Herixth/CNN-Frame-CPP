@@ -18,7 +18,7 @@ typedef std::pair<double, double> Dpd;
  * @name 全连接矩阵的最大宽高 MAX_WH_DNN
  * @{
  */
-#define MAX_WH 850
+#define MAX_WH 122
 /** @} */
 
 /**

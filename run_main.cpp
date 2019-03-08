@@ -45,13 +45,15 @@
 
 using namespace std;
 
-const char* trainfile = "mnist_train.txt";
-const char* testfile = "mnist_test.txt";
+const char* trainfile = "data_train.txt";
+const char* testfile = "data_test.txt";
 const char* cfgfile = "construct.cfg";
 const char* paramfile = "param.txt";
 const char* resultfile = "res.txt";
 const double rate = 0.35;
 
+const int train_num = 60000;
+const int test_num = 10000;
 
 int main(int argc, char* argv[]) {
     srand(unsigned int(time(NULL)));
@@ -60,11 +62,20 @@ int main(int argc, char* argv[]) {
 
     cnn_frame.read_cfg();
 
-    cnn_frame.read_input();
+    For_(iter, 0, train_num) {
 
-    cnn_frame.Forward();
+        cnn_frame.read_input();
 
-    cnn_frame.Backward();
+        cnn_frame.Forward();
+
+        cnn_frame.Backward();
+
+
+        printf("order: %d\n", iter);
+        int res = cnn_frame.get_res();
+        int tar = cnn_frame.get_tar();
+        printf("res: %d     tar: %d    %s\n\n", res, tar, res == tar ? "correct" : "");
+    }
 
 
 #ifdef VISUAL_STUDIO

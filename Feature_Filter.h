@@ -10,6 +10,9 @@ struct Filters {
     //< read layer
     void readFile(std::ifstream&);
 
+    //< save layer
+    void saveFile(std::ofstream&);
+
     //< not read file
     //< N D F
     void rand_create(int, int, int);
@@ -85,7 +88,7 @@ public:
 
     //< backward pre
     //< @param stride default 1
-    void calc_gradient(Maps&, Filters&, int = 1);
+    void calc_gradient(Maps&, Filters&, double, int = 1);
 
     //< backward update weight
     //< just for filter
